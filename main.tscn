@@ -5,7 +5,21 @@
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_45pu6")
 
-[node name="Label" type="Label" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 offset_right = 40.0
-offset_bottom = 23.0
-text = "Launched with arguments: godot-scheme-test://"
+offset_bottom = 40.0
+
+[node name="CounterText" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Count: 0"
+
+[node name="CounterButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "+1"
+
+[node name="StartReceiveButton" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+text = "Start to listen a callback"
+
+[node name="ReceivedMessage" type="Label" parent="VBoxContainer"]
+layout_mode = 2
