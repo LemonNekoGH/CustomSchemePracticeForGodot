@@ -31,7 +31,8 @@ public partial class CustomSchemeRegistrant : Node
         }
         else if (OperatingSystem.IsLinux())
         {
-            File.WriteAllText("~/.local/share/applications/godot-scheme-test.desktop", $"""
+            var homePath = OS.GetEnvironment("HOME");
+            File.WriteAllText($"{homePath}/.local/share/applications/godot-scheme-test.desktop", $"""
                                                                                        [Desktop Entry]
                                                                                        Type=Application
                                                                                        Name=CustomSchemePracticeForGodot
