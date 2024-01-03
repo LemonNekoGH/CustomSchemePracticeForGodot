@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using Godot;
 using Microsoft.Win32;
+using Environment = System.Environment;
 
 namespace CustomSchemePracticeForGodot;
 
@@ -10,22 +11,29 @@ public partial class CustomSchemeRegistrant : Node
 {
     public override void _Ready()
     {
-        GD.Print("[CustomSchemeRegistrant] Registering custom scheme...");
         var currentExecutablePath = OS.GetExecutablePath();
+        var isDebug = new FileInfo(currentExecutablePath).Directory!.FullName != Environment.CurrentDirectory;
+        
+        GD.Print("[CustomSchemeRegistrant] Working directory: " + Environment.CurrentDirectory);
+        GD.Print("[CustomSchemeRegistrant] Registering custom scheme...");
         GD.Print($"[CustomSchemeRegistrant] Current executable path: {currentExecutablePath}");
+        
+        GD.Print("[CustomSchemeRegistrant] Debug mode: " + isDebug);
         GD.Print($"[CustomSchemeRegistrant] OS: {OS.GetName()}");
 
         if (OperatingSystem.IsWindows())
         {
             var currentExecutablePathForWindows = OS.GetExecutablePath().Replace('/', '\\');
-            GD.Print($"[CustomSchemeRegistrant] Current executable path: {currentExecutablePathForWindows}");
 
             var protocolKey = Registry.CurrentUser.CreateSubKey(@"Software\Classes\godot-scheme-test");
             protocolKey!.SetValue("URL Protocol", "", RegistryValueKind.String);
 
             var commandKey =
                 Registry.CurrentUser.CreateSubKey(@"Software\Classes\godot-scheme-test\shell\open\command");
-            commandKey!.SetValue("", $"{currentExecutablePathForWindows} %1", RegistryValueKind.String);
+            commandKey!.SetValue("",
+                isDebug
+                    ? $"{currentExecutablePathForWindows} --path {Environment.CurrentDirectory} %1"
+                    : $"{currentExecutablePathForWindows} %1", RegistryValueKind.String);
 
             GD.Print($"[CustomSchemeRegistrant] Done.");
         }

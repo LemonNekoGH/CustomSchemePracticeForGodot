@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.IO.Pipes;
 using System.Text;
 using Godot;
+using Environment = System.Environment;
 
 namespace CustomSchemePracticeForGodot.Utils;
 
@@ -10,9 +13,13 @@ public static class CallbackChecker
     public static bool Check()
     {
         var args = OS.GetCmdlineArgs().Join(";");
+        GD.Print($"[CallbackChecker] Arguments: {args}");
         if (args == "") return false; // start game normally
+        
+        var currentExecutablePath = OS.GetExecutablePath();
+        var isDebug = new FileInfo(currentExecutablePath).Directory!.FullName != Environment.CurrentDirectory;
+        if (isDebug && args == "") return false; // start game normally
 
-        GD.Print($"[CallbackChecker] {args}");
         try
         {
             // send argument to main process
