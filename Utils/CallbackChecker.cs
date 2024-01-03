@@ -18,7 +18,7 @@ public static class CallbackChecker
         
         var currentExecutablePath = OS.GetExecutablePath();
         var isDebug = new FileInfo(currentExecutablePath).Directory!.FullName != Environment.CurrentDirectory;
-        if (isDebug && args == "") return false; // start game normally
+        if (isDebug && args.EndsWith(".tscn")) return false; // start game normally
 
         try
         {
